@@ -3,6 +3,7 @@ import { Text, TouchableNativeFeedback, View } from 'react-native'
 import { useCitas } from '../hooks/useCitas'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { UserModal } from '../components/UserModal';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const UsuariosPage = () => {
 
@@ -14,9 +15,11 @@ export const UsuariosPage = () => {
 
 
   return (
+    <ScrollView>
     <View style={{
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 20
     }}>
         <Text style={{ color: 'black', fontSize: 25, fontWeight: 'bold', marginBottom: 15, marginTop: 20 }}>USUARIOS</Text>
 
@@ -81,5 +84,6 @@ export const UsuariosPage = () => {
 
         </View>
     </View>
+    </ScrollView>
   )
 }

@@ -25,7 +25,7 @@ export const CalendarioScreen = () => {
         onPressEvent={(event) => {
             onSelectActiveCita(event);
         }}
-          events={ events }
+          events={ events.filter( event => event.status !== 'Pendiente' ) }
           locale="es"
           height={600}
           style={{

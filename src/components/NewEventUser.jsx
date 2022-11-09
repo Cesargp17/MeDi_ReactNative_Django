@@ -1,72 +1,58 @@
-import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import { Button, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableNativeFeedback, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import { useAuth } from '../hooks/useAuth';
 import { useCitas } from '../hooks/useCitas';
 import { BuscarDoctor } from './BuscarDoctor';
 import { BuscarPaciente } from './BuscarPaciente';
-  
-  const areas = [
-    { id: 1, nombre: 'Radiologia' },
-    { id: 2, nombre: 'Cardiologia' },
-    { id: 3, nombre: 'Nutricion' },
-    { id: 4, nombre: 'Medicina General' },
-    { id: 5, nombre: 'Odontología' },
-  ];
 
-export const NewEvent = () => {
+export const NewEventUser = () => {
 
     const navigation = useNavigation();
     const { onCreateNewCita, Usuario, setUsuario, Doctor, setDoctor, usuarios, doctores, TodosLosUsuarios } = useCitas();
+    const { Usuario: User } = useAuth();
 
     const [Titulo, setTitulo] = useState('');
     const [Descripcion, setDescripcion] = useState('');
     const [date, setDate] = useState(new Date());
-    const [dateFinished, setDateFinished] = useState(new Date());
+    // const [dateFinished, setDateFinished] = useState(new Date());
 
     const onSave = () => {
+
+        const usuario = TodosLosUsuarios.find( u => u.name === User.name )
+
         const cita = {
-          title: Titulo,
-          start: date,
-          user: Usuario,
-          doctor: Doctor,
-          status: 'Confirmada',
-          notes: Descripcion,
-          end: dateFinished,
-        }
-
-        if( Titulo === '' ){
-          alert('Agrega un titulo a la cita...');
-          return;
-        } else if( Descripcion === '' ){
-          alert('Agrega una descripción a la cita...');
-          return;
-        }
-         else if( date > dateFinished ){
-          alert('La fecha de finalización no puede ser antes que la fecha de inicio...');
-          return;
-        } else if ( date.toJSON() == dateFinished.toJSON() ){
-          alert('La fecha de finalización y la fecha de inicio no pueden ser iguales...');
-          return;
-        } else if( Doctor === 'Vacio' ){
-          alert('Selecciona el doctor');
-          return;
-        } else if( Usuario === 'Vacio' ){
-          alert('Selecciona un paciente');
-          return;
-        }
-
-        onCreateNewCita( cita )
-        navigation.navigate( 'Calendario' )
-
-        setTitulo('');
-        setDate(new Date());
-        setDateFinished(new Date());
-        setUsuario('Vacio');
-        setDoctor('Vacio');
-        setDescripcion('');
-      }
+            title: Titulo,
+            start: date,
+            user: usuario,
+            doctor: Doctor,
+            status: 'Pendiente',
+            notes: Descripcion,
+            end: date
+          }
+  
+          if( Titulo === '' ){
+            alert('Agrega un titulo a la cita...');
+            return;
+          } else if( Descripcion === '' ){
+            alert('Agrega una descripción a la cita...');
+            return;
+          }
+            else if( Doctor === 'Vacio' ){
+            alert('Selecciona el doctor');
+            return;
+          } 
+  
+          onCreateNewCita( cita )
+          alert('Cita solicitada con éxito')
+          setTitulo('');
+          setDate(new Date());
+          setUsuario('Vacio');
+          setDoctor('Vacio');
+          setDescripcion('');
+          navigation.navigate( 'Calendario' )
+    }
 
   return (
     <ScrollView>
@@ -92,11 +78,8 @@ export const NewEvent = () => {
             multiline
           />
 
-            <Text style={{ color: 'black', marginTop: 30, marginBottom: 10, fontSize: 15, fontWeight: 'bold' }}>Selecciona la fecha de inicio</Text>
-            <DatePicker theme='light' minuteInterval={30} style={{ width: 270, height: 150 }} date={date} onDateChange={setDate} />
-
-            <Text style={{ color: 'black', marginTop: 10, marginBottom: 10, fontSize: 15, fontWeight: 'bold' }}>Selecciona la fecha de terminación</Text>
-            <DatePicker theme='light' minuteInterval={30} style={{ width: 270, height: 150, marginBottom: 30 }} date={dateFinished} onDateChange={setDateFinished} />
+            <Text style={{ color: 'black', marginTop: 30, marginBottom: 10, fontSize: 15, fontWeight: 'bold' }}>Selecciona la fecha</Text>
+            <DatePicker theme='light' minuteInterval={30} style={{ width: 270, height: 150, marginBottom: 20 }} date={date} onDateChange={setDate} />
 
           {
             Doctor === 'Vacio'
@@ -112,22 +95,8 @@ export const NewEvent = () => {
             )
           }
 
-          {
-            Usuario === 'Vacio'
-            ? <BuscarPaciente usuarios={ TodosLosUsuarios.filter( u => u.rol !== 'Doctor' ) }/>
-            : (
-            <View style={ styles.cardSelectedUser }>
-              <Text style={{ ...styles.userText, color: 'black', marginStart: 10 }}>Paciente: </Text>
-              <Text style={ styles.userText }>{ Usuario?.name }</Text>
-              <TouchableNativeFeedback onPress={ () => setUsuario('Vacio') } background={TouchableNativeFeedback.Ripple( 'black', false, 32 )}>
-                <Text style={ styles.textDelete }>X</Text>
-              </TouchableNativeFeedback>
-            </View>
-            )
-          }
-
-          <Pressable style={{ backgroundColor: '#1976d2', padding: 5, marginTop: 15, borderRadius: 20, width: 90, height: 35 }} onPress={ onSave }>
-            <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>GUARDAR</Text>
+          <Pressable style={{ backgroundColor: '#1976d2', padding: 5, marginTop: 10, borderRadius: 20, width: 90, height: 35 }} onPress={ onSave }>
+            <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>SOLICITAR</Text>
           </Pressable>
 
           <TouchableNativeFeedback onPress={ ()=>navigation.navigate( 'Calendario' ) } background={TouchableNativeFeedback.Ripple( 'black', false, 64 )}>

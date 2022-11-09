@@ -18,6 +18,7 @@ export const EditEvent = () => {
     const [date, setDate] = useState(new Date());
     const [dateFinished, setDateFinished] = useState(new Date());
     const [Area, setArea] = useState('Vacio')
+    const [Status, setStatus] = useState('Vacio')
 
     const agregarArea = () => {
         const areaSeleccionada = Areas.find( area => area._id === CitaActiva.doctor?.area || area._id === CitaActiva.doctor?.area._id );
@@ -31,6 +32,7 @@ export const EditEvent = () => {
       setDateFinished(CitaActiva.end || new Date());
       setDoctor(CitaActiva.doctor);
       setUsuario(CitaActiva.paciente);
+      setStatus(CitaActiva.status)
       agregarArea();
     }, [CitaActiva])
     
@@ -44,6 +46,7 @@ export const EditEvent = () => {
           doctor: Doctor,
           notes: Descripcion,
           end: dateFinished,
+          status: Status
         }
 
         if( Titulo === '' ){
@@ -135,6 +138,55 @@ export const EditEvent = () => {
               </View>
               )
           }
+
+          <View style={{ flexDirection: 'row', marginTop: 10 }}>
+           <Pressable
+            onPress={ () => setStatus('Pendiente') }
+           style={{
+               shadowColor: "#000",
+               shadowOffset: {
+                   width: 0,
+                  height: 5,
+              },
+               shadowOpacity: 0.36,
+              shadowRadius: 6.68,
+              
+              elevation: 11,
+              height: 40, 
+              backgroundColor: `${ Status === 'Pendiente' ? '#2196f3' : '#fafafa'}`,
+              width: 110,
+              marginBottom: 10,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 15, 
+           }}>
+            <Text style={{ color: `${ Status === 'Pendiente' ? 'white' : 'black'}`, fontWeight: 'bold' }}>Pendiente</Text>
+            </Pressable>
+
+            <Pressable 
+             onPress={ () => setStatus('Confirmada') }
+            style={{
+               shadowColor: "#000",
+               shadowOffset: {
+                   width: 0,
+                  height: 5,
+              },
+               shadowOpacity: 0.36,
+              shadowRadius: 6.68,
+              
+              elevation: 11,
+              height: 40, 
+              backgroundColor: `${ Status !== 'Pendiente' ? '#2196f3' : '#fafafa'}`,
+              width: 110,
+              marginBottom: 10,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 15,
+              marginLeft: 10
+           }}>
+            <Text style={{ color: `${ Status !== 'Pendiente' ? 'white' : 'black'}`, fontWeight: 'bold' }}>Confirmada</Text>
+          </Pressable>
+          </View>
 
           <Pressable style={{ backgroundColor: '#1976d2', padding: 5, marginTop: 15, borderRadius: 20, width: 90, height: 35 }} onPress={ editarCita }>
             <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>GUARDAR</Text>

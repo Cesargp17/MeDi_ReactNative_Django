@@ -37,6 +37,23 @@ export const CitasProvider = ({ children }) => {
     const { Usuario: User } = useContext(AuthContext);
     const [CitaUsuario, setCitaUsuario] = useState('Vacio');
 
+    const eliminarArea = ( area ) => {
+        const areas = Areas.filter( a => a.area !== area.area );
+        setAreas(areas)
+    }
+
+    const agregarNuevaArea = ( area ) => {
+        setAreas([...Areas, area])
+    }
+
+    const eliminarRol = ( rol ) => {
+        const roles = Roles.filter( a => a.rol !== rol.rol );
+        setRoles(roles)
+    }
+
+    const agregarNuevoRol = ( rol ) => {
+        setRoles([...Roles, rol])
+    }
 
     const cargarUsuarios = ( usuarios = [] ) => {
         const doctor = usuarios.filter( usuario => usuario.rol.rol === 'Doctor' );
@@ -62,7 +79,8 @@ export const CitasProvider = ({ children }) => {
                 start: new Date(citas[i].start),
                 end: new Date(citas[i].end),
                 doctor: citas[i].doctor,
-                paciente: citas[i].user
+                paciente: citas[i].user,
+                status: citas[i].status
             }
             agregarCitas.push(cita)
         }
@@ -115,7 +133,35 @@ export const CitasProvider = ({ children }) => {
     }
 
   return (
-    <CitasContext.Provider value={{ Citas: Citas, crearCita, citaActiva, CitaActiva: CitaActiva, borrarCita, actualizarCita, Usuario, setUsuario, Doctor, setDoctor, cargarUsuarios, usuarios, doctores, cargarCitas, cargarAreas, Areas, CitaUsuario, citasDelUsuario, eliminarUsuario, cargarRoles, Roles, actualizarUsuario, TodosLosUsuarios }}>
+    <CitasContext.Provider value={{ 
+    Citas: Citas, 
+    crearCita, 
+    citaActiva, 
+    CitaActiva: CitaActiva, 
+    borrarCita, 
+    actualizarCita, 
+    Usuario, 
+    setUsuario, 
+    Doctor, 
+    setDoctor, 
+    cargarUsuarios, 
+    usuarios, 
+    doctores, 
+    cargarCitas, 
+    cargarAreas, 
+    Areas, 
+    CitaUsuario, 
+    citasDelUsuario, 
+    eliminarUsuario, 
+    cargarRoles, 
+    Roles, 
+    actualizarUsuario, 
+    TodosLosUsuarios,
+    eliminarArea,
+    agregarNuevaArea,
+    eliminarRol,
+    agregarNuevoRol
+    }}>
         { children }
     </CitasContext.Provider>
   )

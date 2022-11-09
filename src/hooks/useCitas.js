@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { CitasContext } from "../context/CitasContext"
 
 export const useCitas = () => {
-    const { Citas, crearCita, citaActiva, CitaActiva, borrarCita, actualizarCita, Usuario, setUsuario, Doctor, setDoctor, cargarUsuarios, usuarios, doctores, cargarCitas, cargarAreas, Areas, CitaUsuario, citasDelUsuario, eliminarUsuario, cargarRoles, Roles, actualizarUsuario, TodosLosUsuarios } = useContext( CitasContext );
+    const { Citas, crearCita, citaActiva, CitaActiva, borrarCita, actualizarCita, Usuario, setUsuario, Doctor, setDoctor, cargarUsuarios, usuarios, doctores, cargarCitas, cargarAreas, Areas, CitaUsuario, citasDelUsuario, eliminarUsuario, cargarRoles, Roles, actualizarUsuario, TodosLosUsuarios, eliminarArea, agregarNuevaArea, eliminarRol, agregarNuevoRol } = useContext( CitasContext );
     const { Usuario: Persona } = useContext( AuthContext );
     
     const onCreateNewCita = async( cita ) => {
@@ -11,7 +11,7 @@ export const useCitas = () => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-token': Persona.token },
-            body: JSON.stringify({ title: cita.title, notes: cita.notes, start: cita.start, end: cita.end, user: cita.user, doctor: cita.doctor })
+            body: JSON.stringify({ title: cita.title, notes: cita.notes, start: cita.start, end: cita.end, user: cita.user, doctor: cita.doctor, status: cita.status })
         };
 
         try {
@@ -20,6 +20,7 @@ export const useCitas = () => {
                 .then(response => {
                     response.json()
                         .then(data => {
+                            console.log(data)
                             const evento = {
                                 _id: data.evento.id, 
                                 title: data.evento.title,
@@ -27,10 +28,10 @@ export const useCitas = () => {
                                 start: new Date(data.evento.start),
                                 end: new Date(data.evento.end),
                                 paciente: cita.user,
-                                doctor: cita.doctor
-
+                                doctor: cita.doctor,
+                                status: data.evento.status
                             }
-                            crearCita(evento)
+                            // crearCita(evento)
                         });
                 })
         }
@@ -78,7 +79,7 @@ export const useCitas = () => {
         const requestOptions = {
             method: 'PUT', 
             headers: { 'Content-Type': 'application/json', 'x-token': Persona.token },
-            body: JSON.stringify({ title: cita.title, notes: cita.notes, start: cita.start, end: cita.end, user: cita.user, doctor: cita.doctor })
+            body: JSON.stringify({ title: cita.title, notes: cita.notes, start: cita.start, end: cita.end, user: cita.user, doctor: cita.doctor, status: cita.status })
         };
 
         try {
@@ -95,7 +96,8 @@ export const useCitas = () => {
                                 start: new Date(data.evento.start),
                                 end: new Date(data.evento.end),
                                 paciente: cita.user,
-                                doctor: cita.doctor
+                                doctor: cita.doctor,
+                                status: cita.status
 
                             }
                             actualizarCita( evento )
@@ -208,7 +210,103 @@ export const useCitas = () => {
         // actualizarUsuario(usuario)
     }
 
+    const onDeleteArea = ( area ) => {
+
+        const obstaculo = doctores.find( doctor => doctor.area._id === area._id )
+
+        if( obstaculo ){
+            alert('No puedes eliminar esta area porque tiene doctores asignados');
+            return;
+        }
+
+        const requestOptions = {
+            method: 'DELETE', 
+            headers: { 'Content-Type': 'application/json', 'x-token': Persona.token },
+        };
+
+        fetch(`https://mediplus-backend.herokuapp.com/api/areas/${ area._id }`, requestOptions)
+        .then((response) => response.json())
+        .then((json) => {
+            eliminarArea(area)
+            alert('Área eliminada con éxito.')
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+
+    }
+
+    const onAddArea = (area) => {
+
+        const requestOptions = {
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json', 'x-token': Persona.token },
+            body: JSON.stringify({ area: area })
+        };
+
+        fetch(`https://mediplus-backend.herokuapp.com/api/areas/`, requestOptions)
+        .then((response) => response.json())
+        .then((json) => {
+            agregarNuevaArea(json.area);
+            alert('Área agregada con éxito.')
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+        // agregarNuevaArea(area)
+    }
+
+    const onDeleteRol = (rol) => {
+
+        const obstaculo = TodosLosUsuarios.find( user => user.rol._id === rol._id )
+
+        if( obstaculo ){
+            alert('No puedes eliminar este rol porque tiene usuarios asignados');
+            return;
+        }
+
+        const requestOptions = {
+            method: 'DELETE', 
+            headers: { 'Content-Type': 'application/json', 'x-token': Persona.token },
+        };
+
+        fetch(`https://mediplus-backend.herokuapp.com/api/roles/${ rol._id }`, requestOptions)
+        .then((response) => response.json())
+        .then((json) => {
+            eliminarRol(rol)
+            alert('Área eliminada con éxito.')
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+        
+    }
+
+    const onAddRol = (rol) => {
+
+        const requestOptions = {
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json', 'x-token': Persona.token },
+            body: JSON.stringify({ rol: rol })
+        };
+
+        fetch(`https://mediplus-backend.herokuapp.com/api/roles/`, requestOptions)
+        .then((response) => response.json())
+        .then((json) => {
+            agregarNuevoRol(json.rol)
+            alert('Área agregada con éxito.')
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+        // 
+    }
+
     return {
-        Citas, onCreateNewCita, onDeleteCita, onSelectActiveCita, CitaActiva, onUpdateCita, Usuario, setUsuario, Doctor, setDoctor, onLoadUsers, usuarios, doctores, onLoadEvents, onLoadAreas, Areas, CitaUsuario, onLoadUserCitas, onDeleteUser, onLoadRoles, Roles, onUpdateUser, TodosLosUsuarios
+        Citas, onCreateNewCita, onDeleteCita, onSelectActiveCita, CitaActiva, onUpdateCita, Usuario, setUsuario, Doctor, setDoctor, onLoadUsers, usuarios, doctores, onLoadEvents, onLoadAreas, Areas, CitaUsuario, onLoadUserCitas, onDeleteUser, onLoadRoles, Roles, onUpdateUser, TodosLosUsuarios, onDeleteArea, onAddArea, onDeleteRol, onAddRol
     }
 }

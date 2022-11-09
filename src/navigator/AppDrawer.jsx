@@ -10,6 +10,9 @@ import { NewEvent } from '../components/NewEvent';
 import { EditEvent } from '../components/EditEvent';
 import { HomeScreen } from '../screens/HomeScreen';
 import { UsuariosPage } from '../screens/UsuariosPage';
+import { PendientesScreen } from '../screens/PendientesScreen';
+import { NewEventUser } from '../components/NewEventUser';
+import { GestionScreen } from '../screens/GestionScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -25,6 +28,9 @@ export const AppDrawer = () => {
         <Drawer.Screen name="Editar Cita" component={EditEvent} />
         <Drawer.Screen name="Citas" component={CitasScreen} />
         <Drawer.Screen name="Usuarios" component={UsuariosPage} />
+        <Drawer.Screen name="Pendientes" component={PendientesScreen} />
+        <Drawer.Screen name="Solicitar" component={NewEventUser} />
+        <Drawer.Screen name="Gestionar" component={GestionScreen} />
     </Drawer.Navigator>
   )
 }
@@ -103,6 +109,14 @@ const MenuInterno = () => {
                     <TouchableOpacity onPress={ () => navigation.navigate( 'Calendario' ) } style={ styles.menuBoton }>
                         <Text style={styles.menuContent}><Icon name="calendar-outline" size={22} color="black" />&nbsp;&nbsp;Calendario</Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity onPress={ () => navigation.navigate( 'Pendientes' ) } style={ styles.menuBoton }>
+                        <Text style={styles.menuContent}><Icon name="add-circle-outline" size={22} color="black" />&nbsp;&nbsp;Pendientes</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={ () => navigation.navigate( 'Gestionar' ) } style={ styles.menuBoton }>
+                        <Text style={styles.menuContent}><Icon name="settings-outline" size={22} color="black" />&nbsp;&nbsp;Gestionar Clinica</Text>
+                    </TouchableOpacity>
                 </>
                 )
                 : null
@@ -120,6 +134,10 @@ const MenuInterno = () => {
                 <TouchableOpacity onPress={ () => navigation.navigate( 'Citas' ) } style={ styles.menuBoton }>
                     <Text style={styles.menuContent}><Icon name="book-outline" size={22} color="black" />&nbsp;&nbsp;Historial</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity onPress={ () => navigation.navigate( 'Solicitar' ) } style={ styles.menuBoton }>
+                        <Text style={styles.menuContent}><Icon name="bookmarks-outline" size={22} color="black" />&nbsp;&nbsp;Solicitar Cita</Text>
+                    </TouchableOpacity>
 
                 <TouchableOpacity onPress={ () => onStartLogout() } style={ styles.menuBotonLogout }>
                     <Text style={styles.textLogout}><Icon name="log-out-outline" size={22} color="white" />&nbsp;&nbsp;Cerrar sesión</Text>
@@ -207,7 +225,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f44336',
         padding: 10, 
         borderRadius: 15, 
-        marginTop: 220
+        marginTop: 'auto'
     },
 
     textLogout: {

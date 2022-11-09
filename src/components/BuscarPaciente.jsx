@@ -11,7 +11,7 @@ export const BuscarPaciente = ({ usuarios }) => {
 
     const onSearchUser = () => {
         if( Usuario.length !== 0 ){
-            const resultado = usuarios.filter( usuario => usuario.name.toLowerCase().includes(Usuario.toLowerCase())) ;
+            const resultado = usuarios.filter( usuario => usuario.name.toLowerCase().includes(Usuario.toLowerCase()) || usuario._id.includes(Usuario.toLowerCase()));
             setBusqueda(resultado)
         } else {
             setBusqueda(usuarios || [])
@@ -41,7 +41,7 @@ export const BuscarPaciente = ({ usuarios }) => {
               </View>  
             ) 
             : Busqueda.length !== 0
-            ? TodosLosUsuarios.filter( user => user.rol.rol !== 'Doctor' ).map( usuario => (
+            ? Busqueda.filter( user => user.rol.rol !== 'Doctor' ).map( usuario => (
                 <View key={ usuario._id } style={ styles.containerBusqueda }>
                     <Pressable onPress={ () => setPaciente( usuario ) } >
                         <Text  style={ styles.textBusqueda }>{ usuario.name }</Text>

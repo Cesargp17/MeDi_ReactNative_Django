@@ -21,7 +21,7 @@ export const HomeScreen = () => {
 
   return (
     <ScrollView>
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, marginBottom: 100 }}>
         <View style={{
             backgroundColor: '#2196f3',
             maxWidth: '100%',
@@ -78,7 +78,8 @@ export const HomeScreen = () => {
                     elevation: 14,
                     padding: 3
                     }}>{ Usuario.name }</Text>
-                <Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold', fontSize: 18 }}>{ Usuario.rol }</Text>
+                <Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold', fontSize: 18, marginBottom: 10 }}>{ Usuario.rol }</Text>
+                <Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold', fontSize: 16 }}>{ Usuario.id.slice(0,8) }</Text>
         </View>
 
         <View style={{
@@ -139,7 +140,7 @@ export const HomeScreen = () => {
                 fontWeight: 'bold', textAlign: 'center'
                 }}>¿Te preocupa algún sintoma?</Text>
                 <Text style={{ textAlign: 'center', justifyContent: 'center', color: 'black', fontSize: 15, marginBottom: 10, marginTop: 8 }}>¡Solicita una cita medica ya!</Text>
-                <Button title='SOLICITAR CITA'/>
+                <Button onPress={ () => navigation.navigate('Solicitar') } title='SOLICITAR CITA'/>
                 </View>
         </View>
     </ScrollView>

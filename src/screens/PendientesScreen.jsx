@@ -5,15 +5,20 @@ import { useCitas } from '../hooks/useCitas';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
-export const CitasScreen = () => {
+export const PendientesScreen = () => {
 
-  const { CitaUsuario, Areas, onLoadUserCitas } = useCitas();
-  const navigation = useNavigation();
+    const { Citas, Areas, onLoadEvents, onSelectActiveCita } = useCitas();
+    const navigation = useNavigation();
+
+    const seleccionarCita = (cita) => {
+        onSelectActiveCita(cita);
+        navigation.navigate('Editar Cita')
+    }
 
   return (
     <ScrollView>
     <View style={{
-      flex: 1
+      flex: 1, marginBottom: 90
     }}>
         <Text style={{
           textAlign: 'center',
@@ -23,10 +28,10 @@ export const CitasScreen = () => {
           marginTop: 13
         }}
         >
-          HISTORIAL DE CITAS MEDICAS
+          CITAS POR APROBAR
         </Text>
 
-        <Pressable onPress={ () => onLoadUserCitas() } style={{ 
+        <Pressable onPress={ () => onLoadEvents() } style={{ 
           justifyContent: 'center', 
           alignItems: 'center', 
           backgroundColor: '#2196f3',
@@ -71,14 +76,14 @@ export const CitasScreen = () => {
         }}>
           <ScrollView>
             {
-              CitaUsuario.length === 0 || CitaUsuario === 'Vacio'
+              Citas.length === 0 || Citas === 'Vacio'
               ? (
                 <View style={[styles.containerr, styles.horizontal]}>
                   <ActivityIndicator style={{  }} size='large' />
                 </View>  
               )
-              : CitaUsuario.map( cita => (
-                <View style={{
+              : Citas.filter( c => c.status === 'Pendiente' ).map( cita => (
+                <Pressable onPress={ () => seleccionarCita(cita) } style={{
                   shadowColor: "#000",
                   shadowOffset: {
                     width: 0,
@@ -87,7 +92,7 @@ export const CitasScreen = () => {
                   shadowOpacity: 0.36,
                   shadowRadius: 6.68,
                   elevation: 11,
-                  backgroundColor: cita.status === 'Pendiente' ? '#f44336' : '#2196f3',
+                  backgroundColor: '#f44336',
                   justifyContent: 'center',
                   alignItems: 'center',
                   width: '80%',
@@ -96,7 +101,7 @@ export const CitasScreen = () => {
                   marginRight: 10,
                   marginLeft: 40,
                   marginTop: 10
-                }} key={ cita.id }>
+                }} key={ cita._id }>
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 17, marginTop: 4 }}>Fecha: </Text>
                     <Text style={{ color: 'white', fontSize: 17, marginTop: 4 }}>{ new Date(cita.start).toDateString() }</Text>
@@ -109,21 +114,19 @@ export const CitasScreen = () => {
 
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 17, marginTop: 4 }}>Area: </Text>
-                    <Text style={{ color: 'white', fontSize: 17, marginTop: 4, marginBottom: 4 }}>{ Areas.find( a => a._id === cita.doctor.area ).area }</Text>
+                    <Text style={{ color: 'white', fontSize: 17, marginTop: 4, marginBottom: 4 }}>{ Areas.find( a => a._id === cita.doctor.area )?.area }</Text>
                   </View>
 
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 17, marginTop: 4 }}>Estatus: </Text>
-                    <Text style={{ color: 'white', fontSize: 17, marginTop: 4, marginBottom: 4 }}>{ cita.status }</Text>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 17, marginTop: 4 }}>Paciente: </Text>
+                    <Text style={{ color: 'white', fontSize: 17, marginTop: 4, marginBottom: 4 }}>{ cita.paciente.name }</Text>
                   </View>
-                </View>
+                </Pressable>
               ))
             }
           </ScrollView>
         </View>
-        <Pressable
-        onPress={ () => navigation.navigate('Solicitar') }
-        style={{
+        {/* <Pressable style={{
           backgroundColor: '#2196f3',
           borderRadius: 25,
           padding: 8,
@@ -132,20 +135,21 @@ export const CitasScreen = () => {
           marginTop: 20
         }}>
           <Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>SOLICITAR CITA</Text>
-        </Pressable>
+        </Pressable> */}
           </View>
           </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  containerr: {
-    flex: 1,
-    justifyContent: "center"
-  },
-  horizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10
-  }
-})
+    containerr: {
+      flex: 1,
+      justifyContent: "center"
+    },
+    horizontal: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      padding: 10
+    }
+  })
+  
