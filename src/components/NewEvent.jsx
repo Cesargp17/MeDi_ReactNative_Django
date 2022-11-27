@@ -66,6 +66,7 @@ export const NewEvent = () => {
         setUsuario('Vacio');
         setDoctor('Vacio');
         setDescripcion('');
+        alert('Cita creada correctamente')
       }
 
   return (

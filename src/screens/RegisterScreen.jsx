@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { PERMISSIONS, request } from 'react-native-permissions';
 import { useAuth } from '../hooks/useAuth';
 import { styles } from '../styles/appTheme';
 
@@ -22,7 +23,8 @@ export const RegisterScreen = ({ navigation }) => {
       const emailValidation = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i
       if( emailValidation.test(email) === false ) return alert('Ingresa un email válido');
       if( password.length < 5 ) return alert('La contraseña debe contener minimo 5 carácteres');
-      onRegisterUser(email.toLowerCase(), password, nombre)
+      onRegisterUser(email.toLowerCase().trim(), password.trim(), nombre);
+      request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE).then((resp) => { console.log(resp) })
     }
   
     return (
@@ -47,6 +49,7 @@ export const RegisterScreen = ({ navigation }) => {
             style={styles.TextInput}
             placeholder="Ingresa tú email..."
             placeholderTextColor="#003f5c"
+            autoComplete='email'
             onChangeText={email => setEmail(email)}
           />
         </View>

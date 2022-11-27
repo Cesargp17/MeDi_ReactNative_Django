@@ -15,7 +15,6 @@ export const MediplusApp = () => {
   const { onCheckToken } = useToken();
 
   useEffect(() => {
-    onLoadUsers()
     onCheckToken()
   }, [])
 

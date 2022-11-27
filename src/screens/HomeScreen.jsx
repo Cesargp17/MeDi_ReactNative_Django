@@ -3,12 +3,15 @@ import React, { useEffect } from 'react'
 import { Button, Image, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import { useAuth } from '../hooks/useAuth';
-import { useCitas } from '../hooks/useCitas'
+import { useCitas } from '../hooks/useCitas';
 
 export const HomeScreen = () => {
 
-    const { onLoadEvents, onLoadAreas, onLoadUserCitas, CitaUsuario, onLoadRoles } = useCitas();
-    const { Usuario } = useAuth()
+    const { onLoadEvents, onLoadAreas, onLoadUserCitas, CitaUsuario, onLoadRoles, onLoadUsers } = useCitas();
+    const { Usuario } = useAuth();
+    const { rol = 'Usuario' } = Usuario;
+
+    console.log(CitaUsuario)
 
     const navigation = useNavigation();
 
@@ -17,6 +20,7 @@ export const HomeScreen = () => {
         onLoadAreas()
         onLoadUserCitas();
         onLoadRoles()
+        onLoadUsers()
       }, [])
 
   return (
@@ -78,7 +82,7 @@ export const HomeScreen = () => {
                     elevation: 14,
                     padding: 3
                     }}>{ Usuario.name }</Text>
-                <Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold', fontSize: 18, marginBottom: 10 }}>{ Usuario.rol }</Text>
+                <Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold', fontSize: 18, marginBottom: 10 }}>{ rol }</Text>
                 <Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold', fontSize: 16 }}>{ Usuario.id.slice(0,8) }</Text>
         </View>
 

@@ -153,14 +153,14 @@ export const EditEvent = () => {
               
               elevation: 11,
               height: 40, 
-              backgroundColor: `${ Status === 'Pendiente' ? '#2196f3' : '#fafafa'}`,
+              backgroundColor: `${ Status === 'Cancelada' ? '#fafafa' : Status ===  'Pendiente' ? '#2196f3' : '#fafafa'}`,
               width: 110,
               marginBottom: 10,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 15, 
            }}>
-            <Text style={{ color: `${ Status === 'Pendiente' ? 'white' : 'black'}`, fontWeight: 'bold' }}>Pendiente</Text>
+            <Text style={{ color: `${ Status === 'Cancelada' ? 'black' : Status === 'Pendiente' ? 'white' : 'black'}`, fontWeight: 'bold' }}>Pendiente</Text>
             </Pressable>
 
             <Pressable 
@@ -176,7 +176,7 @@ export const EditEvent = () => {
               
               elevation: 11,
               height: 40, 
-              backgroundColor: `${ Status !== 'Pendiente' ? '#2196f3' : '#fafafa'}`,
+              backgroundColor: `${ Status === 'Cancelada' ? '#fafafa' : Status ===  'Confirmada' ? '#2196f3' : '#fafafa'}`,
               width: 110,
               marginBottom: 10,
               justifyContent: "center",
@@ -184,7 +184,31 @@ export const EditEvent = () => {
               borderRadius: 15,
               marginLeft: 10
            }}>
-            <Text style={{ color: `${ Status !== 'Pendiente' ? 'white' : 'black'}`, fontWeight: 'bold' }}>Confirmada</Text>
+            <Text style={{ color: `${ Status === 'Cancelada' ? 'black' : Status === 'Confirmada' ? 'white' : 'black'}`, fontWeight: 'bold' }}>Confirmada</Text>
+          </Pressable>
+
+          <Pressable 
+             onPress={ () => setStatus('Cancelada') }
+            style={{
+               shadowColor: "#000",
+               shadowOffset: {
+                   width: 0,
+                  height: 5,
+              },
+               shadowOpacity: 0.36,
+              shadowRadius: 6.68,
+              
+              elevation: 11,
+              height: 40, 
+              backgroundColor: `${ Status === 'Cancelada' ? 'red' : Status ===  'Confirmada' ? '#fafafa' : '#fafafa'}`,
+              width: 110,
+              marginBottom: 10,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 15,
+              marginLeft: 10
+           }}>
+            <Text style={{ color: `${ Status === 'Cancelada' ? 'white' : Status === 'Pendiente' ? 'black' : 'black'}`, fontWeight: 'bold' }}>Cancelada</Text>
           </Pressable>
           </View>
 

@@ -39,6 +39,7 @@ const MenuInterno = () => {
 
     const { onStartLogout, Usuario } = useAuth();
     const navigation = useNavigation();
+    const { rol = 'Usuario' } = Usuario;
 
     return (
        <DrawerContentScrollView>
@@ -93,7 +94,7 @@ const MenuInterno = () => {
                 {
                     Usuario.rol === 'Usuario'
                     ? null
-                    : <Text style={{ color: 'black', marginRight: 7, fontSize: 16 }}>- { Usuario.rol }</Text>
+                    : <Text style={{ color: 'black', marginRight: 7, fontSize: 16 }}>- { rol }</Text>
                 }
             </View>
             </View>

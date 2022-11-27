@@ -51,7 +51,7 @@ export const NewEventUser = () => {
           setUsuario('Vacio');
           setDoctor('Vacio');
           setDescripcion('');
-          navigation.navigate( 'Calendario' )
+          navigation.navigate( 'Citas' )
     }
 
   return (

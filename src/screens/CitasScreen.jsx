@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useAuth } from '../hooks/useAuth'
 import { useCitas } from '../hooks/useCitas';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -7,9 +7,36 @@ import { useNavigation } from '@react-navigation/native';
 
 export const CitasScreen = () => {
 
-  const { CitaUsuario, Areas, onLoadUserCitas } = useCitas();
+  const { CitaUsuario, Areas, onLoadUserCitas, onUpdateCita } = useCitas();
   const navigation = useNavigation();
 
+  const onPressLoadCitas = () => {
+    onLoadUserCitas();
+    alert('Las citas se han actualizado...')
+  }
+
+  const onPressOk = ( cita ) => {
+    onUpdateCita({ ...cita, status: 'Cancelada', _id: cita.id });
+    onLoadUserCitas();
+    alert('Cita cancelada con exito.')
+  }
+
+  const onPressCancel = ( cita ) => {
+    Alert.alert(
+      "¿Deseas cancelar la cita?",
+      "Esto cancelará tu cita y no podras volverla a solicitar.",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        { 
+          text: "OK", onPress: () => onPressOk(cita)
+        }
+      ]
+    );
+  }
+  
   return (
     <ScrollView>
     <View style={{
@@ -26,7 +53,7 @@ export const CitasScreen = () => {
           HISTORIAL DE CITAS MEDICAS
         </Text>
 
-        <Pressable onPress={ () => onLoadUserCitas() } style={{ 
+        <Pressable onPress={ () => onPressLoadCitas() } style={{ 
           justifyContent: 'center', 
           alignItems: 'center', 
           backgroundColor: '#2196f3',
@@ -71,13 +98,14 @@ export const CitasScreen = () => {
         }}>
           <ScrollView>
             {
-              CitaUsuario.length === 0 || CitaUsuario === 'Vacio'
+              CitaUsuario === 'Vacio' || CitaUsuario.length === 0
               ? (
                 <View style={[styles.containerr, styles.horizontal]}>
-                  <ActivityIndicator style={{  }} size='large' />
+                  {/* <ActivityIndicator style={{  }} size='large' /> */}
+                  <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18, marginTop: 60 }}>No hay citas para mostrar...</Text>
                 </View>  
               )
-              : CitaUsuario.map( cita => (
+                : CitaUsuario.map( cita => (
                 <View style={{
                   shadowColor: "#000",
                   shadowOffset: {
@@ -87,7 +115,7 @@ export const CitasScreen = () => {
                   shadowOpacity: 0.36,
                   shadowRadius: 6.68,
                   elevation: 11,
-                  backgroundColor: cita.status === 'Pendiente' ? '#f44336' : '#2196f3',
+                  backgroundColor: cita.status === 'Pendiente' ? '#2196f3' : cita.status === 'Confirmada' ? '#66bb6a' : '#f44336' ,
                   justifyContent: 'center',
                   alignItems: 'center',
                   width: '80%',
@@ -116,6 +144,34 @@ export const CitasScreen = () => {
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 17, marginTop: 4 }}>Estatus: </Text>
                     <Text style={{ color: 'white', fontSize: 17, marginTop: 4, marginBottom: 4 }}>{ cita.status }</Text>
                   </View>
+                  {
+                    cita.status !== 'Cancelada' && (
+                      <Pressable onPress={ ()=>onPressCancel(cita) } style={{ 
+                        marginBottom: 8, 
+                        marginTop: 5,
+                        justifyContent: 'center', 
+                        alignItems: 'center', 
+                        backgroundColor: '#fafafa',
+                         marginLeft: 'auto', 
+                         marginRight: 'auto', 
+                         width: 100, 
+                         borderRadius: 20, 
+                         padding: 5, 
+                         marginTop: 10,
+                         shadowColor: "#000",
+                          shadowOffset: {
+                            width: 0,
+                            height: 5,
+                          },
+                          shadowOpacity: 0.36,
+                          shadowRadius: 6.68,
+              
+                          elevation: 11,
+                        }}>
+                        <Text style={{ color: 'black' }}><Icon name="reload-outline" size={17} color="black" />&nbsp;&nbsp;Cancelar</Text>
+                      </Pressable>
+                    )
+                  }
                 </View>
               ))
             }

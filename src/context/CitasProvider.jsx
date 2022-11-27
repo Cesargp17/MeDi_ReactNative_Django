@@ -94,7 +94,6 @@ export const CitasProvider = ({ children }) => {
     const crearCita = ( cita ) => {
 
         setCitas([...Citas, cita])
-        alert('Cita creada correctamente')
     };
     
     const citaActiva = ( cita ) => {

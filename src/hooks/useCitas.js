@@ -31,7 +31,7 @@ export const useCitas = () => {
                                 doctor: cita.doctor,
                                 status: data.evento.status
                             }
-                            // crearCita(evento)
+                            crearCita(evento)
                         });
                 })
         }
@@ -74,7 +74,7 @@ export const useCitas = () => {
     
     const onUpdateCita = async( cita ) => {
 
-        console.log(cita._id)
+        console.log(cita)
  
         const requestOptions = {
             method: 'PUT', 
